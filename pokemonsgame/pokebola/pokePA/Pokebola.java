@@ -8,7 +8,6 @@ public abstract class Pokebola {
 
   protected float bonusBall;
   protected String nome;
-  private Random rand = new Random();
   
   public Pokebola (String nome, float bonusBall){
     this.nome = nome;
@@ -22,18 +21,17 @@ public abstract class Pokebola {
   // Método abstrato para aplicar efeitos adicionais caso haja
   public abstract void aplicarEfeito(Pokemon pokemon);
 
-  public float getTaxaDeCaptura(Pokemon pokemon) {
-    int hpAtual = pokemon.getHpAtual();
-    int hpMax = pokemon.getHpMax();
-    int taxaCaptura = pokemon.getTaxaDeCaptura();
-  
-    return (((3 * hpMax - 2 * hpAtual) / (float)(3 * hpMax)) * bonusBall * taxaCaptura * 1); 
+  protected double getTaxaDeCaptura(Pokemon pokemon) {
+    return ((3f*pokemon.getHpMax() - 2*pokemon.getHpAtual())/(3*pokemon.getHpMax())
+            * pokemon.getTaxaDeCaptura() * bonusBall);
   }
 
-  public boolean capturar(Pokemon p) { 
-    aplicarEfeito(p);
-    float chance = getTaxaDeCaptura(p);
-    System.out.printf("Você possui %.2f%% de chance de capturar\n", getTaxaDeCaptura(p) * 0.4);
-    return rand.nextInt(1 , 255) < chance; 
+  public boolean capturar(Pokemon p) {
+    double chance = getTaxaDeCaptura(p);
+    System.out.println("Você tem " + (chance/255f)*100 + "% para capturar o pokemon");
+    Random r = new Random();
+    double sorteio = r.nextInt(255);
+    return sorteio < chance;
   }
+
 }

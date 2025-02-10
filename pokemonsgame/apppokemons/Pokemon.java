@@ -1,8 +1,8 @@
 package pokemonsgame.apppokemons;
 
-import java.util.Random;
+import java.util.Objects;
 
-public class Pokemon {
+public class Pokemon implements Comparable<Pokemon> {
   private String nome;
   private int nivel;
   private int maxNivel;
@@ -10,26 +10,28 @@ public class Pokemon {
   private int hpBase;
   private int hpMax;
   private int hpAtual;
-  private int taxaDeCaptura;
-  private int ataque;
-  private int defesa;
+  private double taxaDeCaptura;
+  private int ataqueBase;
+  private int defesaBase;
   private int velocidade;
-  private int peso;
+  private double peso;
   private int amizade;
-  private static final Random rand = new Random();
+  private int experiencia;
+  private Integer especie;
 
-  public Pokemon(String nome) {
-    this(nome, 1);
-    ataque = (rand.nextInt(20) + 1);
-    defesa = (rand.nextInt(20) + 1);
-    maxNivel = rand.nextInt(100) + 1;
-    peso = (rand.nextInt(32) + 1);
-    velocidade = (int) ((rand.nextInt(26) + 1) / Math.max(peso, 10));
-    hpBase = (rand.nextInt(15) + 1);
-    hpMax = calcularHP(nivel);
-    hpAtual = (int) hpMax/2;
-    taxaDeCaptura = (rand.nextInt(250) + 1);
-    amizade = 0;
+  public Pokemon(int especie, String nome, int hpBase, int ataque, int defesa, int velocidade, int amizade, double peso, double taxaDeCaptura) {
+    this.nome = nome;
+    this.nivel = 1;
+    this.hpBase = hpBase;
+    this.hpAtual = 5;
+    this.hpMax = calcularHP(nivel);
+    this.ataqueBase = ataque;
+    this.defesaBase =  defesa;
+    this.velocidade = velocidade;
+    this.amizade = amizade;
+    this.peso = peso;
+    this.taxaDeCaptura = taxaDeCaptura;
+    this.especie = especie;
   }
   
   public Pokemon(String nome, int nivel) {
@@ -55,6 +57,10 @@ public class Pokemon {
     return ((2 * hpBase * nivel) / 100) + nivel + 10;
   }
 
+  public int getEspecie(){
+    return especie;
+  }
+
   public int getMaxNivel(){
     return maxNivel;
   }
@@ -65,7 +71,7 @@ public class Pokemon {
     return nome;
   }
 
-  public int getPeso(){
+  public double getPeso(){
     return peso;
   }
 
@@ -77,11 +83,11 @@ public class Pokemon {
     return hpAtual;
   }
 
-  public int setTaxaDeCaptura(int valor){
+  public double setTaxaDeCaptura(int valor){
     taxaDeCaptura += valor;
     return taxaDeCaptura;
   }
-  public int getTaxaDeCaptura(){
+  public double getTaxaDeCaptura(){
     return taxaDeCaptura;
   }
 
@@ -122,13 +128,32 @@ public class Pokemon {
     result.append("Nível: " + nivel + "\n");
     result.append("tipo: " + tipo + "\n");
     result.append("pontos de vida: " + hpAtual  + "/" + hpMax + "\n");
-    result.append("ataque: " + ataque + "\n");
-    result.append("defesa: " + defesa + "\n");
+    result.append("ataque: " + ataqueBase + "\n");
+    result.append("defesa: " + defesaBase + "\n");
     result.append("Peso: " + peso + "\n");
     result.append("Velocidade: " + velocidade + "\n");
     result.append("Taxa de captura: " + taxaDeCaptura + "\n");
     result.append("Amizade: " + amizade + "\n");
-
+    result.append("Espécie" + especie);
+    
     return result.toString();
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    Pokemon pokemon = (Pokemon) o;
+    return especie == pokemon.especie && nivel == pokemon.nivel && hpBase == pokemon.hpBase && hpMax == pokemon.hpMax && hpAtual == pokemon.hpAtual && taxaDeCaptura == pokemon.taxaDeCaptura && velocidade == pokemon.velocidade && experiencia == pokemon.experiencia && amizade == pokemon.amizade && ataqueBase == pokemon.ataqueBase && defesaBase == pokemon.defesaBase && Double.compare(peso, pokemon.peso) == 0 && Objects.equals(nome, pokemon.nome);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(especie, nome, nivel, hpBase, hpMax, hpAtual, taxaDeCaptura, velocidade, experiencia, amizade, ataqueBase, defesaBase, peso);
+  }
+  
+  @Override
+  public int compareTo (Pokemon p){
+    return this.especie.compareTo(p.especie);
   }
 }

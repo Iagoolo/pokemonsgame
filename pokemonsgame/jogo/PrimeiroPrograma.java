@@ -4,6 +4,7 @@ import pokemonsgame.appclear.Clear;
 import pokemonsgame.appmapa.Mapa;
 import pokemonsgame.appscan.Scan;
 import pokemonsgame.apptreinador.Treinador;
+import pokemonsgame.pokedex.MenuPokedex;
 
 public class PrimeiroPrograma {
   
@@ -37,7 +38,7 @@ public class PrimeiroPrograma {
       System.out.println();
         
       System.out.println("O que você deseja fazer?");
-      System.out.println("[1] Ver Pokemoons");
+      System.out.println("[1] Abrir Pokedéx");
       System.out.println("[2] Jogar");
       System.out.println("[3] Libertar pokemons");
       System.out.println("[4] Ver perfil");
@@ -47,7 +48,8 @@ public class PrimeiroPrograma {
 
       switch (escolha){
         case 1:
-          anonymus.verPokemons();
+          MenuPokedex Pokedex = new MenuPokedex(anonymus.getPokedex());
+          Pokedex.mostrarMenu();  
           break;
         case 2: 
           world.moverTreinador(anonymus); 

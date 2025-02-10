@@ -15,9 +15,9 @@ public class Batalha {
     this.pokemon = pokemon;
   }
 
-
   public void iniciar() {
     System.out.println("Você encontrou um " + pokemon.getNome() + "!");
+    treinador.getPokedex().registrarEncontro(pokemon);
   }
 
   public boolean terminou() {
@@ -56,12 +56,12 @@ public class Batalha {
 
   private boolean tentarCaptura(Pokebola pokebola) {
     System.out.println("Tentando capturar " + pokemon.getNome() + " com " + pokebola.getNome() + "...");
-    //System.out.println("Chance de captura: " + chanceCaptura + "%");
 
     if (pokebola.capturar(pokemon)) {
       boolean capturado = treinador.capturar(pokemon);
 
       if (capturado) {
+        treinador.getPokedex().registrarCaptura(pokemon);
         System.out.println("Parabéns! Você capturou " + pokemon.getNome());
         terminou = true;
         return true;

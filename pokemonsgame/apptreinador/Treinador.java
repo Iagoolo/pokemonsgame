@@ -10,6 +10,7 @@ import pokemonsgame.pokebola.pokePA.Pokebola;
 import pokemonsgame.pokebola.pokeTC.Greatball;
 import pokemonsgame.pokebola.pokeTC.MasterBall;
 import pokemonsgame.pokebola.pokeTC.UltraBall;
+import pokemonsgame.pokedex.Pokedex;
 
 import java.util.ArrayList;
 
@@ -20,6 +21,7 @@ public class Treinador {
     private final Pokemon[] pokemons = new Pokemon[6]; // Quantidade total de pokemons
     private int quantpk; // Quantidade de pokemons
     private ArrayList<Pokebola> pokebolas = new ArrayList<>(5); // Quantidade total de pokebolas
+    private Pokedex pokedex = new Pokedex();
 
     public Treinador(String nome) {
         super();
@@ -59,22 +61,28 @@ public class Treinador {
             int escolha = Scan.comandoInt();
 
             switch (escolha) {
-                case 1 -> {
-                    adicionarPokemon(new Pokemon("Charmander"));
+                case 1:
+                    Pokemon charmander = new Pokemon(4, "Charmander", 39, 52, 43, 65, 70, 8.5, 45); 
+                    adicionarPokemon(charmander);
+                    pokedex.registrarCaptura(charmander);
+                    pokedex.registrarEncontro(charmander);
                     return;
-                }
-
-                case 2 -> {
-                    adicionarPokemon(new Pokemon("Bulbassauro"));
+                
+                case 2:
+                    Pokemon bulbassauro = new Pokemon (1, "Bulbasauro", 45, 49, 49, 45, 70, 6.9, 45);
+                    adicionarPokemon(bulbassauro);
+                    pokedex.registrarCaptura(bulbassauro);
+                    pokedex.registrarEncontro(bulbassauro);
                     return;
-                }
-
-                case 3 -> {
-                    adicionarPokemon(new Pokemon("Squirtle"));
+                
+                case 3:
+                    Pokemon squirtle = new Pokemon (7, "Squirtle", 44, 48, 65, 43, 70, 9.0, 45);
+                    adicionarPokemon(squirtle);
+                    pokedex.registrarCaptura(squirtle);
+                    pokedex.registrarEncontro(squirtle);
                     return;
-                }
-
-                default -> System.out.println("** Comando inválido! Tente novamente **");
+                
+                default: System.out.println("** Comando inválido! Tente novamente **");
             }
         }
     }
@@ -110,37 +118,6 @@ public class Treinador {
     public void adicionarPokemon(Pokemon novoPokemon) {
         pokemons[quantpk] = novoPokemon;
         quantpk++;
-    }
-
-    public void verPokemons() {
-        System.out.println("=== SEUS POKÉMONS ===");
-        boolean temPokemons = false;
-
-        for (Pokemon p : pokemons) {
-            if (p != null) {
-                System.out.println("- " + p.getNome());
-                temPokemons = true;
-            }
-        }
-
-        if (!temPokemons) {
-            System.out.println("Você ainda não capturou nenhum Pokémon.");
-            return;
-        }
-
-        System.out.println("\nDeseja ver detalhes de todos os seus Pokémon?");
-        System.out.println("[1] Sim / [2] Não");
-        int escolha = Scan.comandoInt();
-
-        if (escolha == 1) {
-            for (Pokemon p : pokemons) {
-                if (p != null) {
-                    System.out.println(p);
-                }
-            }
-        } else if (escolha != 2) {
-            System.out.println("*COMANDO INVÁLIDO*");
-        }
     }
 
     public void libertadorpok() {
@@ -224,6 +201,9 @@ public class Treinador {
         return y;
     }
 
+    public Pokedex getPokedex(){
+        return pokedex;
+    }
 
     @Override
     public String toString() {
