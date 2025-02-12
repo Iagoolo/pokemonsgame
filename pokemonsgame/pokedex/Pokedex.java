@@ -8,7 +8,7 @@ import java.util.*;
 
 public class Pokedex implements Registravel {
   private List<Pokemon> capturados;
-  private int ocorrencias[] = new int[151];
+  private int[] ocorrencias = new int[151];
 
   public Pokedex() {
     capturados = new ArrayList<>();
@@ -32,7 +32,6 @@ public class Pokedex implements Registravel {
         pokemons.add(EspeciePokemon.values()[i]);
       }
     }
-    pokemons.sort((o1, o2) -> o1.ordinal() - o2.ordinal());
     return pokemons;
   }
 

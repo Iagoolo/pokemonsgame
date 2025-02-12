@@ -134,7 +134,8 @@ public class Pokemon implements Comparable<Pokemon> {
     result.append("Velocidade: " + velocidade + "\n");
     result.append("Taxa de captura: " + taxaDeCaptura + "\n");
     result.append("Amizade: " + amizade + "\n");
-    result.append("Espécie" + especie);
+    result.append("Espécie: " + especie);
+    result.append("\n");
     
     return result.toString();
   }
