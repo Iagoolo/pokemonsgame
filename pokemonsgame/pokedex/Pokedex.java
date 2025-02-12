@@ -52,4 +52,8 @@ public class Pokedex implements Registravel {
     long capturados =  contarCapturasPorEspecie(pokemon);
     return (capturados/ocorrencias[pokemon.ordinal()])*100;
   }
+
+  public void removerPokemon(Pokemon pokemon) {
+    capturados.remove(pokemon);
+  }
 }
