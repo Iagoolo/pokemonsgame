@@ -1,6 +1,7 @@
 package pokemonsgame.appmapa;
 
-import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
+
 import pokemonsgame.appclear.Clear;
 import pokemonsgame.apppokemons.Pokemon;
 import pokemonsgame.appscan.Scan;
@@ -13,7 +14,6 @@ public class Mapa {
     private final int largura = 10; // Número de colunas
     private final int altura = 10;  // Número de linhas
     private final String[][] layout;
-    private final Random random = new Random(); // Gerador de números aleatórios
     private Treinador player;
 
     // Construtor que recebe o treinador
@@ -29,13 +29,13 @@ public class Mapa {
         for (int x = 0; x < largura; x++) {
             for (int y = 0; y < altura; y++) {
                 // Adiciona "w" com cor verde ou "-" sem cor
-                layout[y][x] = random.nextDouble() > 0.4 ? "w" : "-";
+                layout[y][x] = ThreadLocalRandom.current().nextDouble() > 0.4 ? "w" : "-";
             }
         }
     }
 
     // Método de movimentação do treinador
-    public void moverTreinador(Treinador treinador) {
+    public void moverTreinador() {
         while (true) {
             Clear.ClearScreen();
             exibirMapa();
@@ -50,8 +50,8 @@ public class Mapa {
             String direcao = Scan.comandoStr().trim().toUpperCase();
 
             // Captura a posição atual
-            int x = treinador.getX();
-            int y = treinador.getY();
+            int x = player.getX();
+            int y = player.getY();
 
             // Atualiza as coordenadas com base na entrada do jogador
             switch (direcao) {
@@ -103,13 +103,15 @@ public class Mapa {
         // Caso um pokemon foi encontrado, uma batalha foi iniciada
         if (encontrouPokemon()){
             Pokemon encontrado = Encontro.getRandomPokemon();
-                    Batalha batalha = new Batalha(player, encontrado);
+            Batalha batalha = new Batalha(player, encontrado);
 
-                    batalha.iniciar();
-                    do {
-                        batalha.proximoTurno();
-                    }while (batalha.terminou() != true);
-        
+            if (!batalha.terminou()){
+                batalha.iniciar();
+
+                while(!batalha.terminou()){
+                    batalha.proximoTurno();
+                }
+            }
         } else if (encontrouPokebola()){ // Caso uma pokebola foi encontrada, adiciona-a
             System.out.println("Você encontrou uma pokebola!!!");
             player.adicionarPokebola();
@@ -118,12 +120,12 @@ public class Mapa {
 
     // Verifica se uma Pokebola foi encontrada
     public boolean encontrouPokebola(){
-        return layout[player.getY()][player.getX()].equals("w") && random.nextBoolean();
+        return layout[player.getY()][player.getX()].equals("w") && ThreadLocalRandom.current().nextBoolean();
     }
 
     // Verifica se encontrou um Pokémon
     public boolean encontrouPokemon() {
-        return layout[player.getY()][player.getX()].equals("w") && random.nextBoolean();
+        return layout[player.getY()][player.getX()].equals("w") && ThreadLocalRandom.current().nextBoolean();
     }
 
     private String formatarComCor(String valor) {

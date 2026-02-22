@@ -14,24 +14,25 @@ import pokemonsgame.pokebola.pokeTC.UltraBall;
 import pokemonsgame.pokedex.Pokedex;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Treinador {
     
     private String nome = "Ash"; // Nome padrão do Treinador
     private int x, y; // Coordenadas x e y do treinador
-    private ArrayList<Pokebola> pokebolas = new ArrayList<>(5); // Quantidade total de pokebolas
-    private Pokedex pokedex;
+    private List<Pokebola> pokebolas; // Pokebolas do treinador
+    private Pokedex pokedex; 
 
-    public Treinador(String nome) {
+    public Treinador() {
         super();
         setNome();
-        x = 0;
-        y = 0;
-        pokedex = new Pokedex();
+        this.x = 0;
+        this.y = 0;
+        this.pokedex = new Pokedex();
+        this.pokebolas = new ArrayList<>(5);
     }
 
     //Nome do Treinador
-
     public void setNome() {
         String entradaNome = Scan.name();
         if (entradaNome == null || entradaNome.trim().isEmpty()) {
@@ -47,7 +48,6 @@ public class Treinador {
     }
 
     //Pokemons do Treinador
-
     public void escolherPrimeiroPokemon() {
         System.out.println("Que maravilha! Você pode escolher seu primeiro Pokémon!");
         System.out.println("Qual deseja escolher?");
@@ -60,19 +60,19 @@ public class Treinador {
 
             switch (escolha) {
                 case 1:
-                    Pokemon charmander = new Pokemon(4, "Charmander", 39, 52, 43, 65, 70, 8.5, 45); 
+                    Pokemon charmander = new Pokemon(EspeciePokemon.CHARMANDER, 1); 
                     pokedex.registrarCaptura(charmander);
                     pokedex.registrarEncontro(charmander);
                     return;
                 
                 case 2:
-                    Pokemon bulbassauro = new Pokemon (1, "Bulbasauro", 45, 49, 49, 45, 70, 6.9, 45);
+                    Pokemon bulbassauro = new Pokemon (EspeciePokemon.BULBASAUR, 1);
                     pokedex.registrarCaptura(bulbassauro);
                     pokedex.registrarEncontro(bulbassauro);
                     return;
                 
                 case 3:
-                    Pokemon squirtle = new Pokemon (7, "Squirtle", 44, 48, 65, 43, 70, 9.0, 45);
+                    Pokemon squirtle = new Pokemon (EspeciePokemon.SQUIRTLE, 1);
                     pokedex.registrarCaptura(squirtle);
                     pokedex.registrarEncontro(squirtle);
                     return;
@@ -83,7 +83,7 @@ public class Treinador {
     }
 
     public void adicionarPokebola(){
-        double chance = Math.random(); // Gera um único número aleatório por iteração
+        double chance = java.util.concurrent.ThreadLocalRandom.current().nextDouble();; // Gera um único número aleatório por iteração
 
         // Adiciona uma Pokebola de acordo com a chance
         if (chance < 0.2) {
@@ -111,7 +111,8 @@ public class Treinador {
     }
 
     public void libertadorpok() {
-        if (pokedex.listarCapturados().size() == 1) {
+        List<Pokemon> capturados = pokedex.listarCapturados();
+        if (capturados.size() == 1) {
             System.out.println("VOCÊ SÓ POSSUI 1 POKEMON");
             System.out.println("VOCÊ NÃO PODE FICAR SEM SEU ÚNICO AMIGO");
             return;
@@ -120,15 +121,15 @@ public class Treinador {
         System.out.println("Qual pokemon você deseja libertar?");
         System.out.println();
 
-        for (int i = 0; i < pokedex.listarCapturados().size(); i++) {
-            System.out.println("[" + i + "] " + pokedex.listarCapturados().get(i).getNome());
+        for (int i = 0; i < capturados.size(); i++) {
+            System.out.println("[" + i + "] " + capturados.get(i).getNome());
         }
 
         while (true) {
             int escolha = Scan.comandoInt();
 
-            if (escolha >= 0 && escolha < EspeciePokemon.values().length) {
-                pokedex.removerPokemon(pokedex.listarCapturados().get(escolha));
+            if (escolha >= 0 && escolha < capturados.size()) {
+                pokedex.removerPokemon(capturados.get(escolha));
                 System.out.println("Pokemon libertado com sucesso!");
                 return;
             } else {
@@ -138,7 +139,9 @@ public class Treinador {
     }
 
     public boolean capturar(Pokemon pokemon) {
-        if (pokedex.listarCapturados().size() == 6) {
+        int qtdCapturados = pokedex.listarCapturados().size();
+
+        if (qtdCapturados == 6) {
             System.out.println("Você não pode capturar mais Pokémon a menos que libere um!");
             System.out.println("Você deseja fazer isso? (S/N)");
             String opcao = Scan.comandoStr();
@@ -150,7 +153,7 @@ public class Treinador {
             }
         }
 
-        if (pokedex.listarCapturados().size() < 6) { // Confirma que ainda há espaço após a possível liberação
+        if (qtdCapturados < 6) { // Confirma que ainda há espaço após a possível liberação
             return true;
         }
 
@@ -172,20 +175,22 @@ public class Treinador {
     }
 
     //Posições do Treinador
-
     public void setPosicao(int x, int y) {
         this.x = x;
         this.y = y;
     }
 
+    // Coordenada X do treinador
     public int getX() {
         return x;
     }
 
+    // Coordenada Y do treinador
     public int getY() {
         return y;
     }
 
+    // Retorna a pokedex do treinador
     public Pokedex getPokedex(){
         return pokedex;
     }

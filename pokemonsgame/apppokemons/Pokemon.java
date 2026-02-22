@@ -1,64 +1,41 @@
 package pokemonsgame.apppokemons;
 
 import java.util.Objects;
+import pokemonsgame.encontros.EspeciePokemon;
 
 public class Pokemon implements Comparable<Pokemon> {
-  private String nome;
+
+  private EspeciePokemon especie;
+  //private String tipo;
   private int nivel;
   private int maxNivel;
-  private String tipo;
-  private int hpBase;
   private int hpMax;
   private int hpAtual;
-  private double taxaDeCaptura;
-  private int ataqueBase;
-  private int defesaBase;
   private int velocidade;
-  private double peso;
+  private int ataqueAtual;
+  private int defesaAtual;
   private int amizade;
   private int experiencia;
-  private Integer especie;
 
-  public Pokemon(int especie, String nome, int hpBase, int ataque, int defesa, int velocidade, int amizade, double peso, double taxaDeCaptura) {
-    this.nome = nome;
-    this.nivel = 1;
-    this.hpBase = hpBase;
-    this.hpAtual = 5;
-    this.hpMax = calcularHP(nivel);
-    this.ataqueBase = ataque;
-    this.defesaBase =  defesa;
-    this.velocidade = velocidade;
-    this.amizade = amizade;
-    this.peso = peso;
-    this.taxaDeCaptura = taxaDeCaptura;
-    this.especie = especie;
-  }
-  
-  public Pokemon(String nome, int nivel) {
-    this(nome, nivel, 100);
-  }
-
-  public Pokemon(String nome, int nivel, int hpBase) {
-    this.nome = nome;
-    this.hpBase = hpBase;
+  public Pokemon(EspeciePokemon especiePokemon, int nivel) {
     this.nivel = nivel;
-    this.hpMax = calcularHP(nivel); // Nível 1
+    this.especie = especiePokemon;
+    this.maxNivel = 100;
+    this.experiencia = 0;
+    this.hpMax = calcularHP(nivel);
+    this.hpAtual = this.hpMax;
+    this.amizade = especiePokemon.getAmizadeBase();
+    this.velocidade = calcularStatusBase(especiePokemon.getVelocidadeBase(), nivel);
+    this.defesaAtual = calcularStatusBase(especiePokemon.getDefesaBase(), nivel);
+    this.ataqueAtual = calcularStatusBase(especiePokemon.getAtaqueBase(), nivel);
   }
 
-  public Pokemon(String nome, int nivel, int hpBase, int taxaDeCaptura){
-    this.nome = nome;
-    this.hpBase = hpBase;
-    this.nivel = nivel;
-    this.hpMax = calcularHP(nivel);
-    this.taxaDeCaptura = taxaDeCaptura;
+  private int calcularStatusBase(int statusBase, int nivel){
+    return ((2 * statusBase * nivel) / 100) + 5;
   }
 
   private int calcularHP(int nivel) {
-    return ((2 * hpBase * nivel) / 100) + nivel + 10;
-  }
-
-  public int getEspecie(){
-    return especie;
+    return ((2 * especie.getHpBase() * nivel) / 100) + nivel + 10;
   }
 
   public int getMaxNivel(){
@@ -68,11 +45,11 @@ public class Pokemon implements Comparable<Pokemon> {
     return nivel;
   }
   public String getNome() {
-    return nome;
+    return  especie.getNome();
   }
 
   public double getPeso(){
-    return peso;
+    return especie.getPeso();
   }
 
   public int getVelocidade(){
@@ -83,23 +60,23 @@ public class Pokemon implements Comparable<Pokemon> {
     return hpAtual;
   }
 
-  public double setTaxaDeCaptura(int valor){
-    taxaDeCaptura += valor;
-    return taxaDeCaptura;
-  }
   public double getTaxaDeCaptura(){
-    return taxaDeCaptura;
+    return especie.getTaxaDeCaptura();
   }
 
   public int getHpMax(){
     return hpMax;
   }
 
+  public EspeciePokemon getEspecie(){
+    return especie;
+  }
+
   public void setAmizade(int valor){
     amizade += 200;
   }
   public String falar() {
-    return nome + " " + nome;
+    return especie.getNome() + " " + especie.getNome();
   }
 
   public int curar(int pontosDeVida) {
@@ -108,15 +85,28 @@ public class Pokemon implements Comparable<Pokemon> {
   }
 
   public void atacar(int movimento, Pokemon alvo) {
-    if (taVivo()) {
-      //ataque!
-      System.out.println("Atacando o " + alvo + " com ataque" + movimento);
+    if (isLive()) {
+      System.out.println(this.getNome() + " está atacando o " + alvo.getNome() + " com ataque" + movimento);
+      alvo.receberDano(this.ataqueAtual);
     } else {
-      System.out.println("to morto :/");
+      System.out.println(getNome() + " está desmaiado");
     }
   }
 
-  private boolean taVivo() {
+  public void receberDano(int dano){
+    
+    dano -= defesaAtual;
+    if (dano <= 0){
+      dano = 1;
+    }
+
+    this.hpAtual -= dano;
+    if (this.hpAtual < 0){
+      this.hpAtual = 0;
+    }
+  }
+
+  public boolean isLive() {
     return this.hpAtual > 0;
   }  
 
@@ -124,15 +114,15 @@ public class Pokemon implements Comparable<Pokemon> {
   public String toString() {
     StringBuilder result = new StringBuilder();
 
-    result.append("Pokemon " + nome).append("\n");
+    result.append("Pokemon " + especie.getNome()).append("\n");
     result.append("Nível: " + nivel + "\n");
-    result.append("tipo: " + tipo + "\n");
+    //result.append("tipo: " + tipo + "\n");
     result.append("pontos de vida: " + hpAtual  + "/" + hpMax + "\n");
-    result.append("ataque: " + ataqueBase + "\n");
-    result.append("defesa: " + defesaBase + "\n");
-    result.append("Peso: " + peso + "\n");
+    result.append("ataque: " + ataqueAtual + "\n");
+    result.append("defesa: " + defesaAtual + "\n");
+    result.append("Peso: " + especie.getPeso() + "\n");
     result.append("Velocidade: " + velocidade + "\n");
-    result.append("Taxa de captura: " + taxaDeCaptura + "\n");
+    result.append("Taxa de captura: " + especie.getTaxaDeCaptura() + "\n");
     result.append("Amizade: " + amizade + "\n");
     result.append("Espécie: " + especie);
     result.append("\n");
@@ -144,13 +134,24 @@ public class Pokemon implements Comparable<Pokemon> {
   public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
+
     Pokemon pokemon = (Pokemon) o;
-    return especie == pokemon.especie && nivel == pokemon.nivel && hpBase == pokemon.hpBase && hpMax == pokemon.hpMax && hpAtual == pokemon.hpAtual && taxaDeCaptura == pokemon.taxaDeCaptura && velocidade == pokemon.velocidade && experiencia == pokemon.experiencia && amizade == pokemon.amizade && ataqueBase == pokemon.ataqueBase && defesaBase == pokemon.defesaBase && Double.compare(peso, pokemon.peso) == 0 && Objects.equals(nome, pokemon.nome);
+    return this.especie == pokemon.especie && 
+           this.nivel == pokemon.nivel && 
+           this.hpAtual == pokemon.hpAtual && 
+           this.hpMax == pokemon.hpMax && 
+           this.velocidade == pokemon.velocidade && 
+           this.experiencia == pokemon.experiencia && 
+           this.ataqueAtual == pokemon.ataqueAtual && 
+           this.defesaAtual == pokemon.defesaAtual &&
+           this.amizade == pokemon.amizade;
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(especie, nome, nivel, hpBase, hpMax, hpAtual, taxaDeCaptura, velocidade, experiencia, amizade, ataqueBase, defesaBase, peso);
+    return Objects.hash(this.especie, this.nivel, this.hpMax, this.hpAtual, 
+                        this.velocidade, this.ataqueAtual, this.defesaAtual, 
+                        this.amizade, this.experiencia);
   }
   
   @Override

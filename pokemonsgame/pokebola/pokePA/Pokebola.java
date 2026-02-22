@@ -1,6 +1,6 @@
 package pokemonsgame.pokebola.pokePA;
 
-import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 import pokemonsgame.apppokemons.Pokemon;
 
@@ -18,20 +18,31 @@ public abstract class Pokebola {
     return nome;
   }
 
-  // Método abstrato para aplicar efeitos adicionais caso haja
+  // Método abstrato para aplicar efeitos adicionais caso haja antes da captura
   public abstract void aplicarEfeito(Pokemon pokemon);
 
+  public void aplicarEfeitoPosCaptura(Pokemon pokemon){}
+
   protected double getTaxaDeCaptura(Pokemon pokemon) {
-    return ((3f*pokemon.getHpMax() - 2*pokemon.getHpAtual())/(3*pokemon.getHpMax())
+    return ((3f * pokemon.getHpMax() - 2 * pokemon.getHpAtual()) / (3*pokemon.getHpMax())
             * pokemon.getTaxaDeCaptura() * bonusBall);
   }
 
   public boolean capturar(Pokemon p) {
+    aplicarEfeito(p);
+
     double chance = getTaxaDeCaptura(p);
     System.out.println("Você tem " + (chance/255f)*100 + "% para capturar o pokemon");
-    Random r = new Random();
-    double sorteio = r.nextInt(255);
-    return sorteio < chance;
+    
+    double sorteio = ThreadLocalRandom.current().nextInt(256);
+    
+    boolean sucesso =  sorteio < chance;
+
+    if (sucesso){
+      aplicarEfeito(p);
+    }
+
+    return sucesso;
   }
 
 }

@@ -160,9 +160,9 @@ public enum EspeciePokemon {
   private final int velocidadeBase;
   private final int amizadeBase;
   private final double peso;
-  private final int taxaDeCaptura;
+  private final double taxaDeCaptura;
 
-  EspeciePokemon(String nome, int hpBase, int ataqueBase, int defesaBase, int velocidadeBase, int amizadeBase, double peso, int taxaDeCaptura) {
+  EspeciePokemon(String nome, int hpBase, int ataqueBase, int defesaBase, int velocidadeBase, int amizadeBase, double peso, double taxaDeCaptura) {
     this.nome = nome;
     this.hpBase = hpBase;
     this.ataqueBase = ataqueBase;
@@ -201,7 +201,7 @@ public enum EspeciePokemon {
     return peso;
   }
 
-  public int getTaxaDeCaptura() {
+  public double getTaxaDeCaptura() {
     return taxaDeCaptura;
   }
 }

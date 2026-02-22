@@ -13,7 +13,7 @@ public class PrimeiroPrograma {
 
     System.out.println("Olá, jogador, qual o seu nome?");
     
-    Treinador anonymus = new Treinador("player");
+    Treinador anonymus = new Treinador();
     Mapa world = new Mapa(anonymus);
 
     System.out.println("Seja bem-vindo, " + anonymus.getNome());
@@ -52,7 +52,7 @@ public class PrimeiroPrograma {
           Pokedex.mostrarMenu();  
           break;
         case 2: 
-          world.moverTreinador(anonymus); 
+          world.moverTreinador(); 
           break;
         case 3:
           anonymus.libertadorpok();

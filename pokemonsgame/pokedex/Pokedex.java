@@ -7,22 +7,12 @@ import pokemonsgame.batalha.Registravel;
 import java.util.*;
 
 public class Pokedex implements Registravel {
+  
   private List<Pokemon> capturados;
-  private int[] ocorrencias = new int[151];
+  private int[] ocorrencias = new int[EspeciePokemon.values().length];
 
   public Pokedex() {
     capturados = new ArrayList<>();
-  }
-
-  @Override
-  public void registrarEncontro(Pokemon pokemon) {
-    int posicaoPokemon = pokemon.getEspecie() - 1;
-    ocorrencias[posicaoPokemon]++;
-  }
-
-  @Override
-  public void registrarCaptura(Pokemon pokemon) {
-    capturados.add(pokemon);
   }
 
   public List<EspeciePokemon> listarVistos() {
@@ -36,7 +26,7 @@ public class Pokedex implements Registravel {
   }
 
   public List<Pokemon> listarCapturados() {
-    capturados.sort((o1, o2) -> o1.getEspecie() - o2.getEspecie());
+    Collections.sort(capturados);
     return capturados;
   }
 
@@ -48,12 +38,29 @@ public class Pokedex implements Registravel {
     return ocorrencias[pokemon.ordinal()];
   }
 
-  public double taxaDeSucess(EspeciePokemon pokemon) {
+  public double taxaDeSucesso(EspeciePokemon pokemon) {
     long capturados =  contarCapturasPorEspecie(pokemon);
-    return (capturados/ocorrencias[pokemon.ordinal()])*100;
+
+    if (ocorrencias[pokemon.ordinal()] == 0){
+      System.out.println("Pokemon não visto ainda");
+      return 0.0;
+    }
+
+    return ((double)capturados/ocorrencias[pokemon.ordinal()])*100;
   }
 
   public void removerPokemon(Pokemon pokemon) {
     capturados.remove(pokemon);
+  }
+
+  @Override
+  public void registrarEncontro(Pokemon pokemon) {
+    int posicaoPokemon = pokemon.getEspecie().ordinal();
+    ocorrencias[posicaoPokemon]++;
+  }
+
+  @Override
+  public void registrarCaptura(Pokemon pokemon) {
+    capturados.add(pokemon);
   }
 }

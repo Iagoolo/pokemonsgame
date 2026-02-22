@@ -11,14 +11,22 @@ public class HeavyBall extends Pokebola {
 
     @Override
     public void aplicarEfeito(Pokemon pokemon){
+
+        double base = pokemon.getTaxaDeCaptura();
+        double modificador = 0;
+        
         if (pokemon.getPeso() < 100){
-            pokemon.setTaxaDeCaptura(-20);
-        } else if (pokemon.getPeso() < 200){
-            pokemon.setTaxaDeCaptura(0);
-        } else if (pokemon.getPeso() < 300){
-            pokemon.setTaxaDeCaptura(20);
+            modificador = -20;
         } else if (pokemon.getPeso() >= 300){
-            pokemon.setTaxaDeCaptura(30);
+            modificador = 30;
+        } else if (pokemon.getPeso() >= 200){
+            modificador = 20;
+        }
+
+        if (base + modificador <= 0){
+            this.bonusBall = 0.1f;
+        } else {
+            this.bonusBall = (float)((base + modificador) / base);
         }
     }
 }

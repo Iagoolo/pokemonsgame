@@ -10,7 +10,10 @@ public class HealBall extends Pokebola{
     }
 
     @Override
-    public void aplicarEfeito(Pokemon pokemon){
+    public void aplicarEfeito(Pokemon pokemon){}
+
+    @Override
+    public void aplicarEfeitoPosCaptura(Pokemon pokemon){
         System.out.println("Restaurado o HP, o PP e qualquer condição de status do pokemon capturado");
         int cura = pokemon.getHpMax() - pokemon.getHpAtual();
         pokemon.curar(cura);

@@ -1,14 +1,18 @@
 package pokemonsgame.encontros;
 
-import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
+
 import pokemonsgame.apppokemons.Pokemon;
 
+// Classe reponsável por selecionar o pokemon e o seu nível
 public class Encontro {
 
   public static Pokemon getRandomPokemon() {
-    Random random = new Random();
-    int sorteado = random.nextInt(EspeciePokemon.values().length);
+    int sorteado = ThreadLocalRandom.current().nextInt(EspeciePokemon.values().length);
     EspeciePokemon base  = EspeciePokemon.values()[(sorteado)];
-    return new Pokemon(sorteado + 1, base.getNome(), base.getHpBase(), base.getAtaqueBase(), base.getDefesaBase(), base.getVelocidadeBase(), base.getAmizadeBase(), base.getPeso(), base.getTaxaDeCaptura());
+
+    int nivelSorteado = ThreadLocalRandom.current().nextInt(1, 6);
+    
+    return new Pokemon(base, nivelSorteado);
   }
 }

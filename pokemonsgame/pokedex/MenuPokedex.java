@@ -24,24 +24,35 @@ public class MenuPokedex {
     
     String opcao;
 
-    do {
+    while(true) {
       mostrarOpcoes();
+
       opcao =  Scan.comandoStr();
-      switch (Integer.parseInt(opcao)) {
-        case 1:
+      switch (opcao) {
+        case "1":
           listarCapturados();
           break;
-        case 2:
+
+        case "2":
           listarVistos();
           break;
-        case 3:
+
+        case "3":
+
           System.out.println("Digite o nome do pokemon: ");
-          opcao = Scan.comandoStr();
-          detalhes(opcao);
+          String nomeBuscado = Scan.comandoStr();
+          detalhes(nomeBuscado);
+          break;
+
+        case "4":
+            System.out.println("Saindo...");
+            return;
+        default:
+          System.out.println("Opção inválida.");
           break;
       }
 
-    } while(!opcao.equalsIgnoreCase("4"));
+    }
   }
 
   private void listarCapturados() {
@@ -51,25 +62,26 @@ public class MenuPokedex {
   }
 
   private void listarVistos() {
-//    for(int i = 0; i < EspeciePokemon.values().length; i++) {
-//      for (EspeciePokemon pokemon: pokedex.listarVistos()) {
-//        if(i == pokemon.ordinal()) {
-//          System.out.println(pokemon.getNome());
-//        } else {
-//          System.out.println("?????????");
-//        }
-//      }
-//    }
     for (EspeciePokemon pokemon: pokedex.listarVistos()) {
       System.out.println(pokemon);
     }
 
   }
 
-  private void detalhes(String pokemon) {
-    EspeciePokemon especie = EspeciePokemon.valueOf(pokemon.toUpperCase());
-    long capturados = pokedex.contarCapturasPorEspecie(especie);
-    double taxa = pokedex.taxaDeSucess(especie);
-    System.out.println("Você capturou " + capturados + " " + especie.getNome() + " dos " + pokedex.contarVisualizacoes(especie) + "que voce viu. Com uma taxa de captura de " + taxa + "%");
+  private void detalhes(String pokemon){
+
+    try{
+      EspeciePokemon especie = EspeciePokemon.valueOf(pokemon.toUpperCase());
+
+      long capturados = pokedex.contarCapturasPorEspecie(especie);
+      double taxa = pokedex.taxaDeSucesso(especie);
+
+      System.out.println("Você capturou " + capturados + " " + especie.getNome() + 
+                         " dos " + pokedex.contarVisualizacoes(especie) + 
+                         " que voce viu. Com uma taxa de captura de " + taxa + "%");
+
+    } catch (IllegalArgumentException e){
+      System.out.println("[ERRO]: O Pokémon '" + pokemon + "' não existe ou seu nome não foi digitado corretamente");
+    }
   }
 }
